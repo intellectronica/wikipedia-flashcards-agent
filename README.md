@@ -30,16 +30,9 @@ You'll learn:
 
 ## 🛠 Workshop Flow
 
-This 60-minute workshop teaches you **how to build with AI coding agents** through hands-on development of a multi-agent flashcard generator. We chose this architecture because each agent is self-contained and testable — perfect for learning incremental AI-assisted development.
-
-**Introduction (5 min):** Live demo of the complete system, then explain the architecture and how we'll build it using AI-assisted development.
-
-**Building the System (45 min):** We'll build three components incrementally:
-1. **Research Agent** — Search Wikipedia and evaluate content (learn: planning, providing context, iteration)
-2. **Analyser Agent** — Extract structured concepts from text (learn: requesting structured output, refinement, debugging)
-3. **Flashcard Designer** — Generate pedagogical Q&A pairs (learn: few-shot prompting, quality control)
-
-**Q&A / Discussion (10+ min):** Open floor for questions about AI-assisted coding techniques, challenges, and best practices.
+1. **Introduction: Setting Context and Planning** — Kicking off an AI-assisted coding project.
+2. **Building the Agents** — Creating the multi-agent system step-by-step with AI assistance.
+3. **Q&A / Discussion** — Open floor for questions about AI-assisted coding techniques, challenges, and best practices.
 
 ---
 
