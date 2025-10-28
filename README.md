@@ -39,9 +39,7 @@ This 60-minute workshop teaches you **how to build with AI coding agents** throu
 2. **Analyser Agent** — Extract structured concepts from text (learn: requesting structured output, refinement, debugging)
 3. **Flashcard Designer** — Generate pedagogical Q&A pairs (learn: few-shot prompting, quality control)
 
-**Integration (10 min):** Wire everything together, run it live, debug issues as they come up.
-
-At each stage, you'll see the AI coding workflow in action: plan → provide context → build → test → iterate → debug.
+**Q&A / Discussion (10+ min):** Open floor for questions about AI-assisted coding techniques, challenges, and best practices.
 
 ---
 
