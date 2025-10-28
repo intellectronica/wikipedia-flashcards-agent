@@ -22,7 +22,7 @@ You'll learn:
 
 ---
 
-> 🎓 This workshop is part of [Hugo Bowne-Anderson's course, *Building LLM-Powered Applications for Data Scientists and Software Engineers*]([https://maven.com/s/course/d56067f338](https://maven.com/hugo-stefan/building-ai-apps-ds-and-swe-from-first-principles?promoCode=vibe25)).
+> 🎓 This workshop is part of [Hugo Bowne-Anderson's course, *Building LLM-Powered Applications for Data Scientists and Software Engineers*](https://maven.com/hugo-stefan/building-ai-apps-ds-and-swe-from-first-principles?promoCode=vibe25).
 >
 > Next cohort starts **November 3** — use code `vibe25` for 25% off (valid until Nov 2, 2025)!
 
