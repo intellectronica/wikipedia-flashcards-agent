@@ -1,0 +1,17 @@
+[project]
+name = "wikipedia-flashcards-agent"
+version = "0.1.0"
+description = "Generate flashcards from Wikipedia articles using AI agents"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic-ai>=0.0.14",
+    "wikipedia>=1.4.0",
+    "python-dotenv>=1.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
