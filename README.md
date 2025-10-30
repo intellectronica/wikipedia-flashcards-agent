@@ -63,4 +63,66 @@ You'll learn:
 
 ---
 
+## What We're Building
+
+```
++---------------------------------------------------------------------+
+|                         USER QUERY (CLI)                            |
+|                  "quantum physics" or similar                       |
++-------------------------------+-------------------------------------+
+                                |
+                                v
++---------------------------------------------------------------------+
+|                      AGENT 1: Wikipedia Search                      |
+|                                                                     |
+|  Search Wikipedia -> Fetch 2-3 articles -> Return full content      |
+|                                                                     |
+|  Output: WikipediaSearchResult (2-3 articles with title + content)  |
++-------------------------------+-------------------------------------+
+                                |
+                                v
+                     +------------------+
+                     |  Combine Articles |
+                     +---------+---------+
+                               |
+                               v
++---------------------------------------------------------------------+
+|                    AGENT 2: Analysis & Summary                      |
+|                                                                     |
+|  Read articles -> Identify concepts -> Create unified narrative     |
+|                                                                     |
+|  Output: Summary string (500-1500 words)                            |
++-------------------------------+-------------------------------------+
+                                |
+                                v
++---------------------------------------------------------------------+
+|                   AGENT 3: Flashcard Creator                        |
+|                                                                     |
+|  Extract facts -> Generate Q&A pairs -> Validate structure          |
+|                                                                     |
+|  Output: FlashcardCollection (10-30 flashcards)                     |
++-------------------------------+-------------------------------------+
+                                |
+                                v
+                     +------------------+
+                     |  Write to File   |
+                     +---------+---------+
+                               |
+                               v
++---------------------------------------------------------------------+
+|                   flashcards_quantum_physics.md                     |
+|                                                                     |
+|  **Question:** What is quantum superposition?                       |
+|  **Answer:** A fundamental principle stating...                     |
+|  ---                                                                |
+|                                                                     |
+|  **Question:** Who developed the Schrodinger equation?              |
+|  **Answer:** Erwin Schrodinger in 1926...                           |
+|  ---                                                                |
+|  ...                                                                |
++---------------------------------------------------------------------+
+```
+
+---
+
 Enjoy building! 🚀
