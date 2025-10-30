@@ -10,12 +10,18 @@ from pydantic_ai import Agent
 # Configure logging
 logger = logging.getLogger(__name__)
 
-# Define the summary agent with OpenAI GPT-4o
-# This agent takes combined article text and produces a plain string summary
-summary_agent = Agent(
-    'openai:gpt-4o',  # Using GPT-4o model via Pydantic AI
-    # No output_type specified = returns plain string
-    system_prompt="""You are an expert educational content synthesizer. Your role is to analyze 
+
+def _get_summary_agent() -> Agent:
+    """
+    Create and return the summary agent instance.
+    
+    This function is called after environment variables are loaded,
+    ensuring OPENAI_API_KEY is available.
+    """
+    return Agent(
+        'openai:gpt-4o',  # Using GPT-4o model via Pydantic AI
+        # No output_type specified = returns plain string
+        system_prompt="""You are an expert educational content synthesizer. Your role is to analyze 
 multiple Wikipedia articles and create a comprehensive, coherent summary for learning purposes.
 
 Your task:
@@ -36,7 +42,7 @@ The summary will be used to generate educational flashcards, so ensure you cover
 - Contrasting viewpoints or debates (if any)
 
 Write as a domain expert explaining the topic to an interested learner."""
-)
+    )
 
 
 def generate_summary(articles_text: str) -> str:
@@ -61,6 +67,9 @@ def generate_summary(articles_text: str) -> str:
     logger.info(f"Generating summary from {input_length:,} characters (~{approx_tokens:,} tokens)")
     
     try:
+        # Create the agent (after environment variables are loaded)
+        summary_agent = _get_summary_agent()
+        
         # Run the agent synchronously
         # The agent will receive the articles_text as the user prompt
         result = summary_agent.run_sync(articles_text)
