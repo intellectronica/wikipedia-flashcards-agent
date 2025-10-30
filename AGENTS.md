@@ -36,3 +36,14 @@
 
 
 ---
+
+## Useful Documentation Links (added 2025-10-30)
+
+- Pydantic AI (agents, tools, structured outputs): https://ai.pydantic.dev/
+	- Models/providers (OpenAI etc.): https://ai.pydantic.dev/models/overview/
+	- Tools: https://ai.pydantic.dev/tools/
+- OpenAI via Pydantic AI: use model id like `openai:gpt-4.1`
+- Wikipedia Python package docs: https://wikipedia.readthedocs.io/
+- Alternative MediaWiki wrapper: https://pypi.org/project/pymediawiki/
+- Environment variables (python-dotenv): https://pypi.org/project/python-dotenv/
+- uv (Astral) — run and manage Python projects: https://docs.astral.sh/uv/
