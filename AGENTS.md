@@ -42,7 +42,11 @@
 - Pydantic AI (agents, tools, structured outputs): https://ai.pydantic.dev/
 	- Models/providers (OpenAI etc.): https://ai.pydantic.dev/models/overview/
 	- Tools: https://ai.pydantic.dev/tools/
-- OpenAI via Pydantic AI: use model id like `openai:gpt-4.1`
+	- Logfire integration: https://ai.pydantic.dev/logfire/
+- Pydantic Logfire (observability platform): https://logfire.pydantic.dev/docs/
+	- Pydantic AI instrumentation: https://logfire.pydantic.dev/docs/integrations/llms/pydanticai/
+	- HTTPX instrumentation: https://logfire.pydantic.dev/docs/integrations/http-clients/httpx/
+- OpenAI via Pydantic AI: use model id like `openai:gpt-4o`
 - Wikipedia Python package docs: https://wikipedia.readthedocs.io/
 - Alternative MediaWiki wrapper: https://pypi.org/project/pymediawiki/
 - Environment variables (python-dotenv): https://pypi.org/project/python-dotenv/
@@ -206,3 +210,60 @@ The Wikipedia Flashcards Generator is now fully implemented according to the thr
 3. Generate flashcards and save to a Markdown file
 
 The system is production-ready and can be used for any topic with reliable results.
+
+### Logfire Instrumentation (2025-10-31)
+
+**What was implemented:**
+- Integrated Pydantic Logfire for observability and monitoring of all AI agent operations
+- Instrumented both Pydantic AI agents and HTTPX for comprehensive tracing
+- All traces and spans are sent to the Logfire platform for visualization and analysis
+
+**Key decisions:**
+1. **Placement of instrumentation**: Added Logfire configuration in `cli.py`'s `main()` function, immediately after loading environment variables. This ensures all agent operations throughout the pipeline are instrumented.
+
+2. **Instrumentation scope**:
+   - `logfire.instrument_pydantic_ai()`: Instruments all Pydantic AI agents (Agent 2 and 3) to capture:
+     - Agent runs and tool calls
+     - Model requests/responses
+     - Token usage and costs
+     - Execution times and errors
+   - `logfire.instrument_httpx(capture_all=True)`: Captures detailed HTTP request/response data for all HTTPX calls, including:
+     - Full request/response headers
+     - Request/response bodies
+     - Timing information
+     - Useful for debugging model API interactions
+
+3. **Configuration**: Used `service_name='wikipedia-flashcards-agent'` to identify all traces from this application in the Logfire dashboard.
+
+4. **Environment variable**: Added `LOGFIRE_TOKEN` to `.env` file (already present). This token authenticates the application with Logfire services.
+
+**How Logfire works with Pydantic AI:**
+- Logfire uses OpenTelemetry under the hood for instrumentation
+- Pydantic AI has built-in support for OpenTelemetry tracing
+- Simply calling `logfire.instrument_pydantic_ai()` enables automatic instrumentation
+- No code changes needed in agent implementations - instrumentation is transparent
+- All spans, metrics, and logs are automatically collected and sent to Logfire
+
+**What gets tracked:**
+- Agent execution start/end with full context
+- Individual model calls (prompts, completions, token counts)
+- Tool executions (if any were added)
+- HTTP requests to OpenAI API with timing and response data
+- Errors and exceptions with full stack traces
+- Custom spans can be added with `logfire.span()` context manager
+
+**Benefits:**
+- Real-time monitoring of agent performance
+- Visual trace timelines showing where time is spent
+- Token usage and cost tracking per run
+- Error debugging with full context
+- Historical analysis of agent behavior
+- Query and filter traces by topic, duration, errors, etc.
+
+**Usage:**
+Run the application normally with `uv run src/cli.py <topic>`. All instrumentation happens automatically. View traces at https://logfire.pydantic.dev/
+
+**File changes:**
+- Updated `src/cli.py`: Added logfire import and configuration calls
+- Updated `.env.example`: Documented LOGFIRE_TOKEN requirement
+- Updated `AGENTS.md`: Added Logfire documentation links and this implementation note

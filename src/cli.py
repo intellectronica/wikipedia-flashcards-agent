@@ -12,6 +12,7 @@ import logging
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
+import logfire
 
 from src.agents.wikipedia_search import search_wikipedia_articles
 from src.agents.summary import generate_summary
@@ -34,6 +35,7 @@ def main():
     Complete pipeline behavior:
     - Parse command-line arguments as the search query
     - Load environment variables (.env file with OPENAI_API_KEY)
+    - Configure Logfire for instrumentation
     - Run Wikipedia search agent (Agent 1)
     - Concatenate article texts with headers
     - Run summary agent (Agent 2) to generate 500-1500 word synthesis
@@ -44,6 +46,13 @@ def main():
     # Load environment variables from .env file
     load_dotenv()
     logger.info("Environment variables loaded from .env")
+    
+    # Configure Logfire for observability
+    # This will automatically instrument all Pydantic AI agents and HTTPX requests
+    logfire.configure(service_name='wikipedia-flashcards-agent')
+    logfire.instrument_pydantic_ai()
+    logfire.instrument_httpx(capture_all=True)  # Capture detailed HTTP request/response data
+    logger.info("Logfire instrumentation enabled (Pydantic AI + HTTPX)")
     
     # Parse command-line arguments into a query string
     if len(sys.argv) < 2:
