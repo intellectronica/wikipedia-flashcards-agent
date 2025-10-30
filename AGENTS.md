@@ -92,3 +92,52 @@
 - Will need to add OpenAI integration for summary agent
 - Will use actual Pydantic AI Agent with `openai:gpt-4.1` model
 - Need to create `.env` file with `OPENAI_API_KEY`
+
+### Step 2 Implementation (2025-10-30)
+
+**What was implemented:**
+- Summary generation using OpenAI GPT-4o via Pydantic AI
+- Agent 2 that synthesizes 2-3 Wikipedia articles into 500-1500 word educational summaries
+- Updated CLI to orchestrate full Agent 1 → Agent 2 pipeline
+- Environment variable loading with python-dotenv
+
+**Key decisions:**
+1. **Agent initialization timing**: Moved agent creation to runtime (inside `generate_summary()` function) rather than at module import time. This ensures `load_dotenv()` is called first, making `OPENAI_API_KEY` available before the agent tries to initialize the OpenAI client.
+
+2. **Model choice**: Using `openai:gpt-4o` instead of `gpt-4.1` (which was mentioned in plan but doesn't exist). GPT-4o is the latest production model.
+
+3. **No structured output for summaries**: Agent 2 returns plain string (no `output_type` specified), which is appropriate for free-form summary generation.
+
+4. **Comprehensive system prompt**: Includes detailed instructions for:
+   - Target word count (500-1500)
+   - Content focus (definitions, relationships, chronology, controversies)
+   - Writing style (coherent paragraphs, educational tone)
+   - Coverage requirements (core concepts, examples, debates)
+
+5. **Validation and logging**: 
+   - Logs input size (~14k tokens for 57k chars)
+   - Validates word count and warns if outside target range
+   - Logs full summary for review
+   - Clear step-by-step progress indicators in CLI
+
+**File structure changes:**
+- `src/agents/summary.py` - Agent 2 implementation with `_get_summary_agent()` and `generate_summary()`
+- `.env.example` - Template for environment variables
+- Updated `src/cli.py` - Now orchestrates both agents with detailed logging
+
+**Testing:**
+- Tested with "Python programming language" topic
+- Successfully fetched 3 articles (37,897 + 5,264 + 14,169 = 57,330 characters)
+- Generated 806-word summary (within 500-1500 target)
+- Summary covered: history, design philosophy, syntax, typing system, implementations, community governance, modern applications
+
+**Performance:**
+- Agent 1 (Wikipedia search): ~2 seconds
+- Agent 2 (OpenAI summary): ~26 seconds
+- Total pipeline: ~28 seconds for complete search → summary
+
+**Next steps (Step 3):**
+- Add flashcards generation agent with structured output (FlashcardsResult)
+- Generate 20-50 Q/A pairs from the summary
+- Render to Markdown file in `tmp/` directory
+- Complete end-to-end pipeline with file output
