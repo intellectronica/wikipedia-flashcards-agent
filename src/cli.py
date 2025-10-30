@@ -2,14 +2,16 @@
 """
 Wikipedia Flashcards Generator CLI
 
-Step 1 implementation: Wikipedia search only.
-Takes a topic as command-line arguments and searches Wikipedia for relevant articles.
+Step 2 implementation: Wikipedia search + summary generation.
+Takes a topic as command-line arguments, searches Wikipedia, and generates a summary.
 """
 
 import sys
 import logging
+from dotenv import load_dotenv
 
 from src.agents.wikipedia_search import search_wikipedia_articles
+from src.agents.summary import generate_summary
 
 # Configure logging to be verbose
 logging.basicConfig(
@@ -25,11 +27,18 @@ def main():
     """
     Main CLI entrypoint.
     
-    Step 1 behavior:
+    Step 2 behavior:
     - Parse command-line arguments as the search query
+    - Load environment variables (.env file with OPENAI_API_KEY)
     - Run Wikipedia search agent (Agent 1)
-    - Log results and article details
+    - Concatenate article texts with headers
+    - Run summary agent (Agent 2) to generate 500-1500 word synthesis
+    - Log results at each stage
     """
+    # Load environment variables from .env file
+    load_dotenv()
+    logger.info("Environment variables loaded from .env")
+    
     # Parse command-line arguments into a query string
     if len(sys.argv) < 2:
         logger.error("Usage: uv run src/cli.py <topic>")
@@ -38,18 +47,20 @@ def main():
     
     query = " ".join(sys.argv[1:])
     logger.info("=" * 80)
-    logger.info("Wikipedia Flashcards Generator - Step 1")
+    logger.info("Wikipedia Flashcards Generator - Step 2")
     logger.info(f"Query: '{query}'")
     logger.info("=" * 80)
     
     try:
-        # Run Agent 1: Wikipedia Search
-        logger.info("Starting Wikipedia search...")
+        # ======================================================================
+        # STEP 1: Wikipedia Search
+        # ======================================================================
+        logger.info("\n[STEP 1] Starting Wikipedia search...")
         result = search_wikipedia_articles(query)
         
-        # Log results
+        # Log Agent 1 results
         logger.info(f"\n{'=' * 80}")
-        logger.info(f"RESULTS: Found {len(result.articles)} articles")
+        logger.info(f"[STEP 1 RESULTS] Found {len(result.articles)} articles")
         logger.info(f"{'=' * 80}")
         
         for i, article in enumerate(result.articles, 1):
@@ -57,11 +68,45 @@ def main():
             logger.info(f"  Content length: {len(article.content):,} characters")
             logger.info(f"  First 200 chars: {article.content[:200]}...")
         
-        logger.info(f"\n{'=' * 80}")
-        logger.info("Step 1 completed successfully!")
-        logger.info(f"Total articles: {len(result.articles)}")
         total_chars = sum(len(a.content) for a in result.articles)
-        logger.info(f"Total content: {total_chars:,} characters")
+        logger.info(f"\n[STEP 1 COMPLETE] Total content: {total_chars:,} characters")
+        
+        # ======================================================================
+        # Concatenate articles for Agent 2
+        # ======================================================================
+        logger.info(f"\n{'=' * 80}")
+        logger.info("[PREPARATION] Concatenating articles for summary generation...")
+        logger.info(f"{'=' * 80}")
+        
+        # Format: # Title\n\nContent\n\n---\n\n
+        combined_text = ""
+        for article in result.articles:
+            combined_text += f"# {article.title}\n\n"
+            combined_text += f"{article.content}\n\n"
+            combined_text += "---\n\n"
+        
+        combined_length = len(combined_text)
+        logger.info(f"Combined text: {combined_length:,} characters")
+        
+        # ======================================================================
+        # STEP 2: Generate Summary
+        # ======================================================================
+        logger.info(f"\n{'=' * 80}")
+        logger.info("[STEP 2] Generating summary with OpenAI...")
+        logger.info(f"{'=' * 80}")
+        
+        summary = generate_summary(combined_text)
+        
+        # Log Agent 2 results
+        logger.info(f"\n{'=' * 80}")
+        logger.info("[STEP 2 RESULTS] Summary generated successfully")
+        logger.info(f"{'=' * 80}")
+        logger.info(f"Summary length: {len(summary):,} characters")
+        logger.info(f"Summary word count: {len(summary.split())} words")
+        logger.info(f"\nFull summary:\n{'-' * 80}\n{summary}\n{'-' * 80}")
+        
+        logger.info(f"\n{'=' * 80}")
+        logger.info("Step 2 completed successfully!")
         logger.info("=" * 80)
         
     except ValueError as e:
