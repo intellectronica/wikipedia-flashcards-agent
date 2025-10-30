@@ -125,4 +125,69 @@ You'll learn:
 
 ---
 
+## 🚀 Usage
+
+The project is now complete and ready to use! Here's how to generate flashcards for any topic:
+
+### Setup
+
+1. **Clone the repository** (if you haven't already):
+   ```bash
+   git clone https://github.com/intellectronica/wikipedia-flashcards-agent.git
+   cd wikipedia-flashcards-agent
+   ```
+
+2. **Set up your OpenAI API key**:
+   Create a `.env` file in the project root:
+   ```bash
+   echo "OPENAI_API_KEY=your-api-key-here" > .env
+   ```
+
+3. **Install dependencies** (handled automatically by `uv`):
+   No manual installation needed! `uv` will handle everything.
+
+### Running the Generator
+
+Generate flashcards for any topic:
+
+```bash
+uv run src/cli.py "Your Topic Here"
+```
+
+**Examples:**
+
+```bash
+# Generate flashcards about Machine Learning
+uv run src/cli.py Machine Learning
+
+# Generate flashcards about Quantum Computing
+uv run src/cli.py Quantum Computing
+
+# Generate flashcards about Python Programming
+uv run src/cli.py Python programming language
+```
+
+### What Happens
+
+The system will:
+1. 🔍 **Search Wikipedia** for 2-3 relevant articles about your topic
+2. 📝 **Generate a summary** (500-1500 words) synthesizing the articles
+3. 🎴 **Create flashcards** (20-50 Q/A pairs) from the summary
+4. 💾 **Save to file** in `tmp/flashcards_{topic}_{timestamp}.md`
+
+The entire process takes about **45-60 seconds** and you'll see detailed logging showing progress at each stage.
+
+### Output
+
+Flashcards are saved as Markdown files in the `tmp/` directory with filenames like:
+- `tmp/flashcards_machine-learning_20251031_0008.md`
+- `tmp/flashcards_quantum-computing_20251031_1430.md`
+
+Each file contains:
+- Topic and generation timestamp
+- Numbered flashcards with clear Q/A format
+- Easy to import into flashcard apps like Anki, Quizlet, or use directly
+
+---
+
 Enjoy building! 🚀
