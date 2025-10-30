@@ -47,3 +47,48 @@
 - Alternative MediaWiki wrapper: https://pypi.org/project/pymediawiki/
 - Environment variables (python-dotenv): https://pypi.org/project/python-dotenv/
 - uv (Astral) — run and manage Python projects: https://docs.astral.sh/uv/
+
+
+---
+
+## Project Architecture and Implementation Notes
+
+### Step 1 Implementation (2025-10-30)
+
+**What was implemented:**
+- Wikipedia Search functionality that fetches 2-3 relevant articles for any given topic
+- Project structure with `src/` directory containing models and agents
+- CLI interface that accepts topic as command-line arguments
+
+**Key decisions:**
+1. **No LLM for Wikipedia search**: Initially tried using Pydantic AI Agent with `test` model, but simplified to direct function call since no LLM decision-making is needed for Step 1. The Wikipedia API search and fetching logic is deterministic.
+
+2. **Direct imports**: Using absolute imports (`from src.models import ...`) rather than relative imports to avoid Python module resolution issues when running scripts directly.
+
+3. **Error handling**: Implemented robust error handling for:
+   - DisambiguationError: tries first disambiguation option
+   - PageError: skips to next candidate
+   - Stub articles: filters by minimum content length (500 chars)
+   - Meta pages: filters out "list of", "index of", "portal:", "category:" pages
+
+4. **Logging**: Verbose INFO-level logging shows:
+   - Search query and candidate results
+   - Each article added with title and character count
+   - Final summary with total articles and total content length
+
+**File structure created:**
+- `pyproject.toml` - Project configuration with dependencies
+- `src/__init__.py` - Package marker
+- `src/models.py` - Pydantic models for data contracts
+- `src/agents/__init__.py` - Agents package marker
+- `src/agents/wikipedia_search.py` - Wikipedia search implementation
+- `src/cli.py` - CLI entrypoint
+
+**Testing:**
+- Tested with "Quantum computing" - fetched 3 articles, 167,276 characters total
+- Tested with "Large Language Models" - fetched 3 articles, 93,899 characters total
+
+**Next steps (Step 2):**
+- Will need to add OpenAI integration for summary agent
+- Will use actual Pydantic AI Agent with `openai:gpt-4.1` model
+- Need to create `.env` file with `OPENAI_API_KEY`
