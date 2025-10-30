@@ -7,7 +7,7 @@
 
 ## Development Process
 
- - Always work in the `main` branch. There is no need for feature branches, unless specifically instructed otherwise.
+ - Always work in the current branch. There is no need for feature branches, unless specifically instructed otherwise.
  - Commit frequently with clear and concise messages that accurately describe the changes made. Whenever you are done and have a working version, commit your changes.
  - Use `author="AI <ai.agent@example.com>"` for all commits so that your commits can be identified.
  - Always consult the documentation, which you can fetch and follow, to make sure you understand how to use the libraries and tools available.
